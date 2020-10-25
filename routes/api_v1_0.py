@@ -293,30 +293,59 @@ def range_query_v1_0(dataset: str, variable: str, interp: str, radius: int, neig
     return resp
 
 
-@bp_v1_0.route('/api/v1.0/data/<string:dataset>/<string:variable>/<string:time>/<string:depth>/<string:location>.json')
-def get_data_v1_0(dataset: str, variable: str, time: str, depth: str, location: str):
+@bp_v1_0.route('/api/v1.0/data/')
+def get_data_v1_0():
     """
-    API Format: /api/v1.0/data/<string:dataset>/<string:variable>/<int:time>/<string:Depth>/<string:location>.json'
-
-    <string:dataset>  : Dataset to extract data - Can be found using /api/v1.0/datasets
-    <string:variable> : Type of data to retrieve - found using /api/v1.0/variables/?dataset='...'
-    <int:time>        : Time retrieved data was gathered/modeled
-    <string:depth>    : Water Depth - found using /api/v1.0/depth/?dataset='...'
-    <string:location> : Location of the data you want to retrieve (Lat, Long)
-
-    **All Components Must be Included**
     """
 
+    args = request.args
+    
+    data_type = args.get("data_type", type=str)
+    if not data_type:
+        raise APIError("no data type")
 
+    dataset = args.get('dataset', type=str)
+    if not dataset:
+        raise APIError("no dataset")
+
+    variable = args.get('variable', type=str)
+    if not variable:
+        raise APIError("no variable")
+
+    depth = args.get('depth', type=str)
+    if not depth:
+        raise APIError("no depth")
+
+    time = args.get('time', type=int)
+    if not time:
+        raise APIError("no time")
+
+    end_time = args.get('end_time', type=int)
+    
     config = DatasetConfig(dataset)
-    with open_dataset(config) as ds:
-        date = ds.convert_to_timestamp(time)
-        data = utils.misc.get_point_data(
-            dataset, variable, date, depth,
-            list(map(float, location.split(",")))
-        )
-        resp = jsonify(data)
-        resp.cache_control.max_age = 2
+    with open_dataset(config, variable=variable, timestamp=time, endtime=end_time) as ds:
+        
+        result = {
+            'units': config.variable[variable].unit,
+            'name': config.variable[variable].name
+        }
+        
+        if data_type == 'point':
+            lats = [float(l) for l in args.get('lats', type=str).split(',')]
+            lons = [float(l) for l in args.get('lons', type=str).split(',')]
+
+            data = ds.get_point(lats, lons, depth, variable, time, end_time)
+
+        elif data_type == 'line':     
+            raise NotImplementedError("This part of the API hasn't been implmented yet :(")
+
+        elif data_type == 'area':
+            raise
+        else:
+            raise APIError(f"Unknown data_type given: {data_type}. Only point, line, and area are supported.")
+
+        resp = jsonify(result)
+        resp.cache_control.max_age = MAX_CACHE
         return resp
 
 
