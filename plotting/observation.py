@@ -82,6 +82,15 @@ class ObservationPlotter(PointPlotter):
                         self.observation_variable_units.append(dt.unit)
 
                 observation['data'] = np.ma.array(data)#.transpose()
+
+                if np.ndim(observation['data']) == 1:
+                    # Data was structured incorrectly b/c of unmatched variable dims
+                    num_lvl = np.max([len(d) for d in data])
+                    for d in data:
+                        while len(d) < num_lvl:
+                            d.append((np.nan,np.nan)) # Fill missing data 
+                    observation['data'] = np.ma.array(data)
+
                 self.observation[idx] = observation
 
                 self.points = [[o['latitude'], o['longitude']]
@@ -187,7 +196,7 @@ class ObservationPlotter(PointPlotter):
         for idx in self.observation_variable:
             ax_idx += 1
             for d in data:
-                if d.shape[1] == 1:
+                if np.ma.compressed(d[idx,:,0]).shape[0] == 1:
                     style = '.'
                 else:
                     style = '-'
