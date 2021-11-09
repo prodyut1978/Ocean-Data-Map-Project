@@ -40,8 +40,11 @@ def create_app(testing: bool = False):
     app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
     app.config.from_pyfile('oceannavigator.cfg', silent=False)
     app.config.from_envvar('OCEANNAVIGATOR_SETTINGS', silent=True)
-    app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[10], profile_dir='profiler_results')
     app.testing = testing
+
+    if not os.path.isdir('./profiler_results'):
+        os.mkdir('./profiler_results')
+    app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[10], profile_dir='./profiler_results')
 
     if testing:
         # Override cache dirs when testing
