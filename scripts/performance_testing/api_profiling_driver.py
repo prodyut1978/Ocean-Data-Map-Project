@@ -48,6 +48,7 @@ class ONav_Profiling_Driver():
                 format = '%(created)f %(asctime)s %(levelname)s \n %(message)s', 
                 datefmt = '%H:%M:%S'
             )
+            logging.getLogger().addHandler(logging.StreamHandler())
             logging.info('\n****************** Starting Profile Driver ******************\n')
 
         with open(config_url) as f:
@@ -367,7 +368,7 @@ if __name__ == '__main__':
     """
     # default options
     url = 'https://navigator.oceansdata.ca'
-    config = '/home/ubuntu/ONavScripts/profiling_scripts/api_profiling_config.json'
+    config = '/home/on/Ocean-Data-Map-Project/scripts/performance_testing/api_profiling_config.json'
     prof_path = None
     id = f'test_usr_{np.random.randint(1,100)}'
     max_attempts = 3
