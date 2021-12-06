@@ -306,13 +306,21 @@ class ONav_Profiling_Driver():
 
 
     def write_csv(self):
-        with open(f'{self.file_id}_api_profiling_results.csv', 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile, delimiter = ',')
-            for key, value in self.results.items():
-                writer.writerow([key])
-                for v in value:
-                    writer.writerow(v)
-                writer.writerow([])
+
+        csvfilename = f'{self.file_id}_api_profiling_results.csv'
+        if not os.path.exists(csvfilename):
+            with open(csvfilename, 'w') as f:
+                f.write('Test Type, Dataset, Variable, Start Time, Response Time, Profile File\n')
+
+        with open(csvfilename, 'a') as f:
+            for k, v in self.results.items():
+                f.write(k+',')
+                for vv in v[1:]:
+                    vv = [str(vvv) for vvv in vv]
+                    print(','.join(vv))
+                    f.write(','.join(vv))
+                f.write('\n')
+        
 
 
     def run(self):
@@ -334,8 +342,8 @@ class ONav_Profiling_Driver():
         logging.info(f'Profile testing end time:  {time.ctime(end_time)} ({end_time}).')
         logging.info(f'Time to complete all tests: {(end_time - self.start_time):.0f} seconds.')
 
-        if self.logging:
-            shutil.move(self.log_filename, os.getcwd())
+        #if self.logging:
+            #shutil.move(self.log_filename, os.getcwd())
 
         if self.prof_path:
             self.get_profile_paths()
@@ -367,11 +375,12 @@ if __name__ == '__main__':
 
     """
     # default options
-    url = 'https://navigator.oceansdata.ca'
+    url = 'http://0.0.0.0:5000'
     config = '/home/on/Ocean-Data-Map-Project/scripts/performance_testing/api_profiling_config.json'
     prof_path = None
-    id = f'test_usr_{np.random.randint(1,100)}'
-    max_attempts = 3
+    #id = f'test_usr_{np.random.randint(1,100)}'
+    id = 'test_usr_99'
+    max_attempts = 1
     max_time = 120
     enable_logging = True
     save_csv = True
