@@ -77,7 +77,7 @@ def info_v1_0():
     raise APIError(
         "This is the Ocean Navigator API - Additional Parameters are required to complete a request, help can be found at ...")
 
-@bp_v1_0.route('/api/git-hash')
+@bp_v1_0.route('/api/v1.0/git-hash')
 def git_version():
     def _minimal_ext_cmd(cmd):
         # construct minimal environment
@@ -99,7 +99,7 @@ def git_version():
     except OSError:
         GIT_REVISION = "Unknown"
 
-    return GIT_REVISION
+    return jsonify(GIT_REVISION)
 
 
 @bp_v1_0.route('/api/test-sentry')
