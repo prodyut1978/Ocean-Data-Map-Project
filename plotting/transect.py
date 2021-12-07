@@ -843,7 +843,7 @@ class TransectPlotter(LinePlotter):
             self.depth_limit is not None and
             self.linearthresh < self.depth_limit
         ):
-            plt.yscale('symlog', linthreshy=self.linearthresh)
+            plt.yscale('symlog', linthresh=self.linearthresh)
 
         ax.yaxis.set_major_formatter(ScalarFormatter())
 

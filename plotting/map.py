@@ -5,11 +5,11 @@ from textwrap import wrap
 
 import matplotlib.pyplot as plt
 import numpy as np
-import osr
+from osgeo import osr
 import pyresample.utils
 from flask_babel import gettext
 from geopy.distance import GeodesicDistance
-from matplotlib.bezier import concatenate_paths
+from matplotlib.path import Path
 from matplotlib.colors import LogNorm
 from matplotlib.patches import PathPatch, Polygon
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -675,7 +675,7 @@ class MapPlotter(Plotter):
                 paths = []
                 for poly in polys:
                     paths.append(poly.get_path())
-                path = concatenate_paths(paths)
+                path = Path.make_compound_path(*paths)
 
                 poly = PathPatch(path,
                                  fill=None,

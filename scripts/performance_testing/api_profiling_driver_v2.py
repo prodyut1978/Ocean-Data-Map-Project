@@ -291,7 +291,7 @@ class ONav_Profiling_Driver():
     def get_profile_paths(self):
         prof_files = os.listdir(self.prof_path)
         plot_profs = [p for p in prof_files if 'plot' in p]
-        plot_times = np.array([p.split('.')[-2] for p in plot_profs]).astype(np.int)
+        plot_times = np.array([p.split('.')[-2] for p in plot_profs]).astype(int)
         for row in self.results:
             if row[0] != 'Dataset' and not np.isnan(row[-1]):
                 if self.prof_path:

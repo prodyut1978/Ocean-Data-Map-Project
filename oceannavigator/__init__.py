@@ -12,7 +12,7 @@ from flask_compress import Compress
 from sentry_sdk.integrations.flask import FlaskIntegration
 from utils.ascii_terminal_colors import ASCIITerminalColors
 
-from werkzeug.contrib.profiler import ProfilerMiddleware
+from werkzeug.middleware.profiler import ProfilerMiddleware
 
 # Although DatasetConfig is not used in this module, this import is absolutely necessary
 # because it is how the rest of the app gets access to DatasetConfig
@@ -44,7 +44,7 @@ def create_app(testing: bool = False):
 
     if not os.path.isdir('./profiler_results'):
         os.mkdir('./profiler_results')
-    app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[10], profile_dir='./profiler_results')
+    app.wsgi_app = ProfilerMiddleware(app.wsgi_app, stream=None, restrictions=[10], profile_dir='./profiler_results')
 
     if testing:
         # Override cache dirs when testing
