@@ -318,7 +318,7 @@ class ONav_Profiling_Driver():
             writer = csv.writer(csvfile, delimiter = ',')
 
             if os.stat(csv_name).st_size == 0:
-                writer.writerow(['Test', 'Dataset', 'Git Hash', 'Variable', 'Start Time', 'Response Time (s)', 'Profile File Path'])
+                writer.writerow(['Test', 'Dataset', 'Variable', 'Git Hash', 'Start Time', 'Response Time (s)', 'Profile File Path'])
             for row in self.results:
                 writer.writerow([*row[:3],self.git_hash, self.format_time(row[3]),f'{row[4]:.4f}',row[5]])
 
@@ -378,7 +378,7 @@ if __name__ == '__main__':
     prof_path = '/home/on/Ocean-Data-Map-Project/profiler_results'#None
     usr_id = 'justin'
     max_attempts = 1
-    max_time = 300
+    max_time = 120
 
     try:
         opts, args = getopt.getopt(sys.argv[1:], ':a:t:', ['url=', 'config=', 'csv=', 'prof=', 'id='])
