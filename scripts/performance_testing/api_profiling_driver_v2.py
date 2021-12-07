@@ -364,6 +364,7 @@ if __name__ == '__main__':
 
     --url: the url of the Navigator instance that's being profiled
     --config: the path of configuration file
+    --csv: the path to the csv file for ouput data (one will be created if not provided)
     --prof: the path to the directory containing server profiling results
     --id: a unique identifer for output file names 
     -a: the number of attempts to reach each end point allowed 
@@ -377,7 +378,7 @@ if __name__ == '__main__':
     prof_path = '/home/on/Ocean-Data-Map-Project/profiler_results'#None
     usr_id = 'justin'
     max_attempts = 1
-    max_time = 120
+    max_time = 300
 
     try:
         opts, args = getopt.getopt(sys.argv[1:], ':a:t:', ['url=', 'config=', 'csv=', 'prof=', 'id='])
