@@ -8,7 +8,7 @@ import numpy as np
 import osr
 import pyresample.utils
 from flask_babel import gettext
-from geopy.distance import VincentyDistance
+from geopy.distance import GeodesicDistance
 from matplotlib.bezier import concatenate_paths
 from matplotlib.colors import LogNorm
 from matplotlib.patches import PathPatch, Polygon
@@ -105,7 +105,7 @@ class MapPlotter(Plotter):
                self.quiver['variable'] != 'none'
 
     def load_data(self):
-        distance = VincentyDistance()
+        distance = GeodesicDistance()
         height = distance.measure(
             (self.bounds[0], self.centroid[1]),
             (self.bounds[2], self.centroid[1])
